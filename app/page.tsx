@@ -10,10 +10,14 @@ const Profiles = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       const { data, error } = await supabase
-        .from<any, any>('profiles')
+        .from('profiles')
         .select('*');
-      if (error) console.error('Error fetching profiles:', error);
-      else setProfiles(data || []);
+
+      if (error) {
+        console.error('Error fetching profiles:', error);
+      } else {
+        setProfiles(data || []);
+      }
     };
 
     fetchProfiles();

@@ -2,8 +2,6 @@
 
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
-import Link from 'next/link';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -20,6 +18,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+import { supabase } from '@/lib/supabase/client';
+import Link from 'next/link';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -252,7 +253,7 @@ const EditProfile = () => {
                       <FormControl>
                         <Input
                           {...field}
-                          type="text"
+                          type="number"
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
                             field.onChange(isNaN(value) ? 0 : value);
