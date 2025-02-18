@@ -1,9 +1,8 @@
-export type UserData = {
+export interface UserData {
   id: string;
   name: string;
   username: string;
   email: string;
-  password: string;
   phone_number: string;
   country: string;
   currency: string;
@@ -17,5 +16,17 @@ export type UserData = {
   email_verified: boolean;
   kyc_status: string;
   level: string;
-  referral_list: string[];
-};
+  kyc_verified: boolean;
+}
+
+export interface VerificationData {
+  id: string;
+  user_id: string;
+  document_urls: string[];
+  created_at: string;
+  profiles: {
+    name: string;
+    email: string;
+    kyc_verified: boolean;
+  };
+}
