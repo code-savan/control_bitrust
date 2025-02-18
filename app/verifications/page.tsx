@@ -3,21 +3,25 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
+import { Menu } from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
 interface Verification {
-  id: string;
-  user_id: string;
-  document_urls: string[];
-  created_at: string;
-  name: string;
+    id: string;
+    user_id: string;
+    document_urls: string[];
+    created_at: string;
+    name: string;
   email: string;
   kyc_status: string;
 }
 
 const Verifications = () => {
-  const [verifications, setVerifications] = useState<Verification[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+    const [verifications, setVerifications] = useState<Verification[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchVerifications = async () => {
@@ -57,11 +61,27 @@ const Verifications = () => {
     fetchVerifications();
   }, []);
 
+
+
+
   if (loading) return <div>Loading Verifications...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div className="min-h-screen">
+         {/* Header for mobile */}
+      <header className="lg:hidden bg-white border-b px-4 py-3 flex items-center justify-between">
+        <h1 className="text-xl font-bold">Bitrust Admin</h1>
+        <button onClick={() => setIsSidebarOpen(true)}>
+          <Menu size={24} />
+        </button>
+      </header>
+
+    <div className='flex'>
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
+            <div className='md:p-8 p-3 border min-h-screen w-full overflow-y-auto'>
+
       <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">User Verifications</h1>
       <div className="overflow-x-auto shadow-lg rounded-lg">
         <table className="min-w-full bg-white rounded-lg">
@@ -94,6 +114,8 @@ const Verifications = () => {
           </tbody>
         </table>
       </div>
+            </div>
+    </div>
     </div>
   );
 };

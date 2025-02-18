@@ -3,12 +3,16 @@ import { useEffect, useState } from 'react';
 import { UserData } from '@/lib/supabase/types';
 import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import Sidebar from './components/Sidebar';
+import { Menu } from 'lucide-react';
+
 
 const Profiles = () => {
   const [profiles, setProfiles] = useState<UserData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -68,8 +72,21 @@ const Profiles = () => {
   if (error) return <div className="p-8">Error: {error}</div>;
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Bitrust Admin</h1>
+    <div className="min-h-screen ">
+        {/* Header for mobile */}
+      <header className="lg:hidden bg-white border-b px-4 py-3 flex items-center justify-between">
+        <h1 className="text-xl font-bold">Bitrust Admin</h1>
+        <button onClick={() => setIsSidebarOpen(true)}>
+          <Menu size={24} />
+        </button>
+      </header>
+
+        <div className='flex'>
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
+            <div className='md:p-8 p-3 border min-h-screen w-full overflow-y-auto'>
+
+      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">User Profiles</h1>
       <div className="overflow-x-auto shadow-lg rounded-lg">
         <table className="min-w-full bg-white rounded-lg">
           <thead className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
@@ -79,7 +96,7 @@ const Profiles = () => {
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Phone Number</th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Country</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+              <th className="px-6 text-right text-xs font-medium uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -90,26 +107,27 @@ const Profiles = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{profile.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{profile.phone_number}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{profile.country}</td>
-                <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                <td className="px-6 py-4 text-right whitespace-nowrap space-x-2 flex justify-end">
                   <Link
                     href={`/edit-profile/${profile.id}`}
-                    className="text-blue-600 hover:text-blue-900"
+                    className="text-blue-600 hover:text-blue-900 font-semibold"
                   >
                     Edit
                   </Link>
-                  <Button
-                    variant="destructive"
+                  <p
                     onClick={() => handleDelete(profile.id)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    className=" font-semibold cursor-pointer text-red-500"
                   >
                     Delete
-                  </Button>
+                  </p>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+            </div>
+        </div>
     </div>
   );
 };
