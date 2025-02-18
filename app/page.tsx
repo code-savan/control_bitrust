@@ -42,14 +42,21 @@ const Profiles = () => {
 
       if (verificationError) throw verificationError;
 
-      // Delete the user
-      const { error: userError } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', id);
+      // Call the API to delete the user (profile and auth)
+      const response = await fetch('/api/delete-user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      });
 
-      if (userError) throw userError;
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Error deleting auth user');
+      }
 
+      // Remove the profile from the local state
       setProfiles(profiles.filter(profile => profile.id !== id));
       alert('User and associated verifications deleted successfully.');
     } catch (err: unknown) {
