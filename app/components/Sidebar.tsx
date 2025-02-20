@@ -50,6 +50,15 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               <FileCheck size={20} />
               <span>Verifications</span>
             </Link>
+            <Link
+              href="/deposits"
+              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                pathname === '/deposits' ? 'bg-blue-600' : 'hover:bg-gray-800'
+              }`}
+            >
+              <FileCheck size={20} />
+              <span>Deposits</span>
+            </Link>
           </div>
         </nav>
       </aside>
