@@ -35,7 +35,7 @@ const Profiles = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this user and all associated verifications?")) return;
+    if (!confirm("Are you sure you want to delete this user and all associated records?")) return;
 
     try {
       // Delete verifications associated with the user
@@ -45,6 +45,14 @@ const Profiles = () => {
         .eq('user_id', id);
 
       if (verificationError) throw verificationError;
+
+      // Delete deposits associated with the user
+      const { error: depositError } = await supabase
+        .from('deposits')
+        .delete()
+        .eq('user_id', id);
+
+      if (depositError) throw depositError;
 
       // Call the API to delete the user (profile and auth)
       const response = await fetch('/api/delete-user', {
@@ -62,7 +70,7 @@ const Profiles = () => {
 
       // Remove the profile from the local state
       setProfiles(profiles.filter(profile => profile.id !== id));
-      alert('User and associated verifications deleted successfully.');
+      alert('User and associated records deleted successfully.');
     } catch (err: unknown) {
       alert(`Error deleting user: ${(err as Error).message}`);
     }
